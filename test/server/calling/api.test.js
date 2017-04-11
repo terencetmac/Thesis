@@ -21,9 +21,5 @@ describe('Calling API tests', () => {
 			// return request(app)
 			// .post('/api/calling/call')
 			// .send({userId: 1, token: 'R234FFDnekgj342'})
-			// .end((req, res) => {
-			// 	expect(res.statusCode).toBe(201);
-			// 	done();
-			// })
 	});
 });
