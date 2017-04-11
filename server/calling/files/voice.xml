@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+    <Say voice="woman">How is your day going?</Say>
+    <Record 
+    	action="http://e1846e10.ngrok.io/api/calling/called" 
+    	maxLength="60" />
+</Response>

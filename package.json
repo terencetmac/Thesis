@@ -36,7 +36,8 @@
     "redux-logger": "^3.0.1",
     "redux-thunk": "^2.2.0",
     "twilio": "^2.11.1",
-    "webpack": "^2.3.3"
+    "webpack": "^2.3.3",
+    "xml": "^1.0.1"
   },
   "devDependencies": {
     "babel-cli": "^6.7.5",

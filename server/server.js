@@ -13,11 +13,12 @@ const app = express();
 if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test') {
   dev.webpack(app);
 }
-
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(express.static(path.resolve(__dirname, '../client/public')));
 
+app.use('/calls', express.static(path.join(__dirname, '/calling/files')))
 app.use('/api/calling', callingHandler);
 
 const port = process.env.PORT || 3000;
