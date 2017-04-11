@@ -1,5 +1,5 @@
-// jest.disableAutomock();
-// jest.unmock('supertest').unmock('../../../server/server.js');
+jest.disableAutomock();
+jest.unmock('supertest').unmock('../../../server/server.js');
 
 // import request from 'supertest-as-promised';
 // import express from 'express';
