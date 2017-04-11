@@ -20,6 +20,7 @@ module.exports = {
 	},
 
 	sign: function(user) {
+		// TODO: Update payload
 		let payload = {
 			email: user.email
 		};
@@ -50,5 +51,31 @@ module.exports = {
 				}
 			});
 		});
+	},
+
+	authMiddleware: function(req, res, next) {
+		let token = req.headers['authorization'];
+
+		if (!token) {
+			return next();
+		}
+
+		token = token.replace('Bearer ', '');
+
+		module.exports.verify(token)
+			.then(decoded => {
+				// TODO: Set user object into req
+				// req.user = user;
+				next();
+			})
+			.catch(err => {
+				// TODO: Create a proper error message
+				return res.status(401).json({
+					message: 'Please login.'
+				});
+			});
 	}
+
+	// TODO: Verify token on refresh
+
 }
