@@ -72,6 +72,9 @@
     ],
     "moduleDirectories": [
       "node_modules"
+    ],
+    "unmockedModulePathPatterns": [
+      "supertest"
     ]
   }
 }
