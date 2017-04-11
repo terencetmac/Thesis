@@ -5,7 +5,7 @@ const client = new twilio.RestClient(accountSid, authToken);
 
 module.exports = {
 	call: function(userId) {
-		// From DB, grab phone based on userId
+		// TODO: From DB, grab phone based on userId
 		let user = {
 			phone: '+16505421376'
 		}
