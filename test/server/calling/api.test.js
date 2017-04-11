@@ -1,7 +1,7 @@
 // jest.disableAutomock();
 // jest.unmock('supertest').unmock('../../../server/server.js');
 
-// import request from 'supertest';
+// import request from 'supertest-as-promised';
 // import express from 'express';
 let app;
 
@@ -16,13 +16,14 @@ describe('Calling API tests', () => {
 	//	delete process.env.NODE_ENV;
 	});
 
-	it('should run a test', () => {
+	it('should run a test', (done) => {
+		expect(true).toBe(true);
 			// return request(app)
-			// .get('/api/calling/call')
+			// .post('/api/calling/call')
+			// .send({userId: 1, token: 'R234FFDnekgj342'})
 			// .end((req, res) => {
 			// 	expect(res.statusCode).toBe(201);
 			// 	done();
 			// })
-			expect(true).toBe(true);
-	})
-})
+	});
+});
