@@ -18,8 +18,5 @@ describe('Calling API tests', () => {
 
 	it('should run a test', (done) => {
 		expect(true).toBe(true);
-			// return request(app)
-			// .post('/api/calling/call')
-			// .send({userId: 1, token: 'R234FFDnekgj342'})
 	});
 });
