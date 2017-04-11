@@ -50,11 +50,11 @@
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.10.3",
     "jest": "^19.0.2",
-    "jest-cli": "^19.0.2",
     "react-addons-test-utils": "^15.5.0",
     "really-need": "^1.9.2",
     "regenerator-runtime": "^0.10.3",
     "supertest": "^3.0.0",
+    "supertest-as-promised": "^4.0.2",
     "webpack-dev-middleware": "^1.10.1",
     "webpack-dev-server": "^2.4.2",
     "webpack-hot-middleware": "^2.18.0"
