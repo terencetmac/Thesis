@@ -4,6 +4,8 @@ const Call = require('../calling/config.js');
 
 router.post('/signup', (req, res) => {
 	res.status(200).send();
+	// TODO: Add server validation
+	
 	// let { email, phone, firstName, lastName, password } = req.body.user;
 	// let user;
 	// auth.hash(password)
