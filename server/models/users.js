@@ -9,6 +9,12 @@ module.exports.new = (user) => {
     user)
 }
 
+module.exports.verify = (phone) => {
+  return db.one(
+    'UPDATE users SET active = $1 WHERE phone = $2',
+    [true, phone])
+}
+
 module.exports.findByEmail = (email) => {
   return db.oneOrNone('SELECT * FROM users WHERE email = $1', [email])
 }
