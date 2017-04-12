@@ -1,9 +1,5 @@
-// jest.disableAutomock();
-// jest.unmock('supertest');
-
-// import request from 'supertest-as-promised';
-// import express from 'express';
-let app;
+import request from 'supertest-as-promised';
+import app from '../../../server/server.js';
 
 describe('Calling API tests', () => {
 	beforeEach(() => {
@@ -11,12 +7,21 @@ describe('Calling API tests', () => {
  		// app = require('../../../server/server.js');
 	});
 
-	afterEach(() => {
-		//app.close(done);
+	afterAll((done) => {
+		app.close(done);
 		// delete process.env.NODE_ENV;
 	});
 
-	it('should run a test', () => {
-		expect(true).toBe(true);
+	it('/api/calling/call should respond to a POST request.', () => {
+		return request(app).post('/api/calling/call')
+			.expect(200)
+	});
+
+	it('/api/calling/called should respond to a POST request for Twilio', () => {
+		return request(app).post('/api/calling/called')
+			.expect(200)
+			.then((res) => {
+				expect(res.header['content-type']).toEqual('text/xml; charset=utf-8');
+			});
 	});
 });
