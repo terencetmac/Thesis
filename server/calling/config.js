@@ -25,7 +25,7 @@ module.exports = {
 		});
 	},
 
-	sendVerification: function(phone, countryCode) {
+	sendVerification: function(phone, countryCode = 1) {
 
 		let config = {
 			method: 'POST'
@@ -36,8 +36,8 @@ module.exports = {
 		let params = buildParams({
 			api_key: process.env.AUTHY_KEY,
 			via: 'sms',
-			phone_number: phone || '4156715732',
-			country_code: countryCode || 1
+			phone_number: phone,
+			country_code: countryCode
 		});
 
 		fetch(`https://api.authy.com/protected/json/phones/verification/start?${params}`, config)
@@ -49,7 +49,7 @@ module.exports = {
 			});
 	},
 
-	verify: function(phone, countryCode, code) {
+	verify: function(phoneNumber, countryCode, verificationCode) {
 
 		let config = {
 			method: 'GET'
@@ -57,9 +57,9 @@ module.exports = {
 
 		let params = buildParams({
 			api_key: process.env.AUTHY_KEY,
-			phone_number: phone,
+			phone_number: phoneNumber,
 			country_code: countryCode,
-			verification_code: code.toString()
+			verification_code: verificationCode.toString()
 		});
 
 		return fetch(`https://api.authy.com/protected/json/phones/verification/check?${params}`, config)

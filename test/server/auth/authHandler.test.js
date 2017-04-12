@@ -4,6 +4,7 @@ let db = null;
 const dbConfig = require('../../../db/config.js');
 db = dbConfig.db;
 dbConfig.loadDb(db);
+jest.mock('../../../server/calling/config.js');
 
 describe('authHandler tests', () => {
 
@@ -73,8 +74,18 @@ describe('authHandler tests', () => {
 			})
 	});
 
+	/**
+	 * 3rd party API call route, not testing for now
+	 */
 	// it('should handle POST /verify route', () => {
+	// 	const Call = require('../../../server/calling/config.js');
+	// 	Call.verify = jest.fn(() => {
+	// 		return Promise.resolve('value');
+	// 	});
 	// 	return request(app).post('/api/auth/verify')
+	// 		.send({
+	// 			verificationCode: '0562'
+	// 		})
 	// 		.expect(200)
 	// });	
 

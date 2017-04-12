@@ -58,7 +58,6 @@ module.exports = {
 
 	authMiddleware: function(req, res, next) {
 		let token = req.headers['authorization'];
-
 		if (!token) {
 			return next();
 		}
@@ -67,11 +66,11 @@ module.exports = {
 
 		module.exports.verify(token)
 			.then(decoded => {
-				// TODO: Set user object into req
-				// req.user = user;
+				req.user = decoded;
 				next();
 			})
 			.catch(err => {
+				console.log(err);
 				// TODO: Create a proper error message
 				return res.status(401).json({
 					message: 'Please login.'

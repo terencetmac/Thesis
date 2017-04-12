@@ -11,29 +11,28 @@ router.post('/signup', (req, res) => {
 
 	auth.hash(password)
 		.then(hashedPassword => {
-			user = {
+			return User.new({
 				email,
 				first_name: firstName,
 				last_name: lastName,
 				password: hashedPassword,
 				phone
-			}
-			return User.new(user);
+			});
 		})
-		.then(user => {
+		.then(userFromDb => {
 	//		// TODO: Verify user's number
 	//		Call.sendVerification(phone, countryCode);
-			user = user;
+			user = userFromDb;
 			return auth.sign(user);
 		})
-		.then((token) => {
+		.then(token => {
 			res.status(200).json({
 				user: user,
 				token: token
 			});	
 		})
 		.catch(err => {
-			console.error('Error: ', err);
+			// console.error('Error: ', err);
 			res.status(400).json({
 				error: 'Email exists.'
 			});
@@ -62,20 +61,25 @@ router.post('/login', (req, res) => {
 			});
 		})
 		.catch(err => {
-			console.error('Error: ', err)
+			// console.error('Error: ', err)
 			res.status(401).json({
 				error: err
 			});
 		});
 });
 
+router.use('/verify', auth.authMiddleware);
 router.post('/verify', (req, res) => {
 	let verificationCode = req.body.verificationCode;
-	Call.verify(phone, countryCode = 1, verificationCode)
+	let phoneNumber = req.user.phone // from middleware
+	Call.verify(phoneNumber, 1, verificationCode)
 		.then(response => {
-			res.status(201).json({
-				message: 'Phone number has been successfully verified.'
-			})
+			if (response) {
+				User.verify(phoneNumber);
+				res.status(201).json({
+					message: 'Phone number has been successfully verified.'
+				});
+			}
 		})
 		.catch(err => {
 			res.status(400).json({
