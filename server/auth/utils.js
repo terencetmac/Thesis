@@ -22,7 +22,11 @@ module.exports = {
 	sign: function(user) {
 		// TODO: Update payload
 		let payload = {
-			email: user.email
+			user_id: user.user_id,
+			email: user.email,
+			first_name: user.first_name,
+			last_name: user.last_name,
+			phone: user.phone
 		};
 
 		let config = {

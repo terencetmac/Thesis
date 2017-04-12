@@ -42,8 +42,12 @@ describe('Users table', () => {
       phone: '123-456-7890'
     }
     return Users.new(newUser)
-      .then(userId => {
-        expect(userId).toBeDefined();
+      .then(user => {
+        expect(user.user_id).toBeDefined();
+        expect(user.email).toEqual(newUser.email);
+        expect(user.first_name).toEqual(newUser.first_name);
+        expect(user.last_name).toEqual(newUser.last_name);
+        expect(user.phone).toEqual(newUser.phone);                
       });
   })
 

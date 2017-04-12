@@ -5,7 +5,7 @@ module.exports.new = (user) => {
     'INSERT INTO users\
     (email, first_name, last_name, password, phone)\
     VALUES (${email}, ${first_name}, ${last_name}, ${password}, ${phone})\
-    RETURNING user_id',
+    RETURNING user_id, email, first_name, last_name, phone',
     user)
 }
 
