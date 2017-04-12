@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const auth = require('./utils.js');
+const Call = require('../calling/config.js');
 
 router.post('/signup', (req, res) => {
 	// let { email, phone, firstName, lastName, password } = req.body.user;
@@ -16,6 +17,8 @@ router.post('/signup', (req, res) => {
 	// 		// return User.create(user)
 	// 	})
 	// 	.then(user => {
+	//		// TODO: Verify user's number
+	//		Call.sendVerification(phone, countryCode);
 	// 		user = user;
 	// 		// TODO: Update payload
 	// 		return auth.sign(userPayload);
@@ -53,6 +56,22 @@ router.post('/login', (req, res) => {
 	// 			error: err.message
 	// 		});
 	// 	});
+});
+
+router.post('/verify', (req, res) => {
+	let verificationCode = req.body.verificationCode;
+	// TODO: Get user phone and country code from DB
+	Call.verify(phone, countryCode, verificationCode)
+		.then(response => {
+			res.status(201).json({
+				message: 'Phone number has been successfully verified.'
+			})
+		})
+		.catch(err => {
+			res.status(400).json({
+				error: err
+			})
+		})
 });
 
 module.exports = router;

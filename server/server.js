@@ -9,6 +9,7 @@ const requestHandler = require('./requestHandler.js');
 const callingHandler = require('./calling/callingHandler.js');
 const authHandler = require('./auth/authHandler.js');
 const auth = require('./auth/utils.js');
+const Call = require('./calling/config.js');
 
 const app = express();
 
@@ -24,6 +25,13 @@ app.use(express.static(path.resolve(__dirname, '../client/public')));
 app.get('/protected', auth.authMiddleware, (req, res) => {
 	res.status(200).send();
 });
+
+app.get('/testing', (req, res) => {
+	// Call.sendVerification();
+})
+app.get('/testingverify', (req, res) => {
+	// Call.verify();
+})
 
 app.use('/calls', express.static(path.join(__dirname, '/calling/files')))
 app.use('/api/calling', callingHandler);
