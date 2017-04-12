@@ -23,8 +23,7 @@ router.post('/signup', (req, res) => {
 		.then(user => {
 	//		// TODO: Verify user's number
 	//		Call.sendVerification(phone, countryCode);
-	// 		user = user;
-	// 		// TODO: Update payload
+			user = user;
 			return auth.sign(user);
 		})
 		.then((token) => {
@@ -34,7 +33,7 @@ router.post('/signup', (req, res) => {
 			});	
 		})
 		.catch(err => {
-			// console.log('Error: ', err);
+			console.error('Error: ', err);
 			res.status(400).json({
 				error: 'Email exists.'
 			});
@@ -42,34 +41,37 @@ router.post('/signup', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
-	res.status(200).send();
-	// let { email, password } = req.body;	
-	// let user;
-	// User.find(email)
-	// 	.then((user) => {
-	// 		return auth.compare(password, user.password);
-	// 	})
-	// 	.then(verified => {
-	// 		// TODO: Update user payload
-	// 		return auth.sign(user);
-	// 	})
-	// 	.then(token => {
-	// 		res.status(201).json({
-	// 			user: user,
-	// 			token: token
-	// 		});
-	// 	})
-	// 	.catch(err => {
-	// 		res.status(400).json({
-	// 			error: err.message
-	// 		});
-	// 	});
+	let { email, password } = req.body;	
+	let user;
+	User.findByEmail(email)
+		.then((userFromDb) => {
+			user = userFromDb;
+			return auth.compare(password, user.password);
+		})
+		.then(verified => {
+			if (verified) {
+				return auth.sign(user);
+			} else {
+				throw new Error('Invalid Email/Password combination');
+			}
+		})
+		.then(token => {
+			res.status(200).json({
+				user: user,
+				token: token
+			});
+		})
+		.catch(err => {
+			console.error('Error: ', err)
+			res.status(401).json({
+				error: err
+			});
+		});
 });
 
 router.post('/verify', (req, res) => {
 	let verificationCode = req.body.verificationCode;
-	// TODO: Get user phone and country code from DB
-	Call.verify(phone, countryCode, verificationCode)
+	Call.verify(phone, countryCode = 1, verificationCode)
 		.then(response => {
 			res.status(201).json({
 				message: 'Phone number has been successfully verified.'

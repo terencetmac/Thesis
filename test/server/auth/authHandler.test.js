@@ -14,17 +14,17 @@ describe('authHandler tests', () => {
 	afterAll(() => {
 		app.close();
 	  delete process.env.NODE_ENV;
-		return db.one("DELETE FROM users WHERE email = 'terence@mail.com'");	
+		return db.one("DELETE FROM users WHERE email = 'newUser@mail.com'");	
 	});
 
 	it('should handle POST /signup route', () => {
 		return request(app).post('/api/auth/signup')
 			.send({
-				email: 'terence@mail.com',
-				firstName: 'Terence',
-				lastName: 'Tham',
+				email: 'newUser@mail.com',
+				firstName: 'New user',
+				lastName: 'To be deleted',
 				password: 'password',
-				phone: '6505421376'
+				phone: '7582931276'
 			})
 			.expect(200)
 			.then(res => {
@@ -36,11 +36,11 @@ describe('authHandler tests', () => {
 	it('should send an error message if email exists in the DB', () => {
 		return request(app).post('/api/auth/signup')
 			.send({
-				email: 'terence@mail.com',
-				firstName: 'Terence',
-				lastName: 'Tham',
+				email: 'newUser@mail.com',
+				firstName: 'New user',
+				lastName: 'To be deleted',
 				password: 'password',
-				phone: '6505421376'
+				phone: '7582931276'
 			})
 			.expect(400)
 			.then(res => {
@@ -55,6 +55,22 @@ describe('authHandler tests', () => {
 				password: 'password'
 			})
 			.expect(200)
+			.then(res => {
+				expect(res.body.user).toBeDefined();
+				expect(res.body.token).toBeDefined();
+			});
+	});
+
+	it('should send an error message if login fails.', () => {
+		return request(app).post('/api/auth/login')
+			.send({
+				email: 'terence@mail.com',
+				password: 'wrongpassword'
+			})
+			.expect(401)
+			.then(res => {
+				expect(res.error.text).toBeDefined();
+			})
 	});
 
 	// it('should handle POST /verify route', () => {

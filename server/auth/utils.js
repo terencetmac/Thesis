@@ -20,7 +20,6 @@ module.exports = {
 	},
 
 	sign: function(user) {
-		// TODO: Update payload
 		let payload = {
 			user_id: user.user_id,
 			email: user.email,
