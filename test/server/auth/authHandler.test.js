@@ -52,7 +52,7 @@ describe('authHandler tests', () => {
 	it('should handle POST /login route', () => {
 		return request(app).post('/api/auth/login')
 			.send({
-				email: 'terence@mail.com',
+				email: 'newUser@mail.com',
 				password: 'password'
 			})
 			.expect(200)
@@ -65,7 +65,7 @@ describe('authHandler tests', () => {
 	it('should send an error message if login fails.', () => {
 		return request(app).post('/api/auth/login')
 			.send({
-				email: 'terence@mail.com',
+				email: 'newUser@mail.com',
 				password: 'wrongpassword'
 			})
 			.expect(401)

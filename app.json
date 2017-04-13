@@ -24,6 +24,9 @@
     },
     "JWT_SECRET": {
       "required": true
+    },
+    "AUTHY_KEY": {
+      "required": true
     }
   },
   "formation": {
