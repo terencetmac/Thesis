@@ -3,11 +3,10 @@ const express = require('express');
 const request = require('supertest-as-promised');
 
 process.env.JWT_SECRET = 'secret';
-
+// process.env.NODE_ENV = 'test'
 describe('Auth Utils tests', () => {
 
-	afterAll((done) => {
-		app.close(done);
+	afterAll(() => {
 		// delete process.env.NODE_ENV;
 	});
 
