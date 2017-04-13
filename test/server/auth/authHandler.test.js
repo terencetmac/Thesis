@@ -30,7 +30,7 @@ describe('authHandler tests', () => {
   	});
 	});
 
-	test('should handle POST /signup route', (done) => {
+	test('should handle POST /signup route', () => {
 		return resetDb().then(() => {
 			return request(server).post('/api/auth/signup')
 				.send({
@@ -44,12 +44,11 @@ describe('authHandler tests', () => {
 				.then(res => {
 					expect(res.body.user).toBeDefined();
 					expect(res.body.token).toBeDefined();
-					done();
 				});
 		});
 	});
 
-	test('should send an error message if email exists in the DB', (done) => {
+	test('should send an error message if email exists in the DB', () => {
 		return resetDb().then(() => {
 			return request(server).post('/api/auth/signup')
 				.send({
@@ -71,12 +70,11 @@ describe('authHandler tests', () => {
 				.expect(400)
 				.then(res => {
 					expect(res.error.text).toBeDefined();
-					done();
 				});
 		});
 	});
 
-	test('should handle POST /login route', (done) => {
+	test('should handle POST /login route', () => {
 		return resetDb().then(() => {
 			return request(server).post('/api/auth/signup')
 				.send({
@@ -97,7 +95,6 @@ describe('authHandler tests', () => {
 			.then(res => {
 				expect(res.body.user).toBeDefined();
 				expect(res.body.token).toBeDefined();
-				done();
 			});
 		})
 	});
