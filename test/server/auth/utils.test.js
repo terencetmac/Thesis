@@ -6,6 +6,11 @@ process.env.JWT_SECRET = 'secret';
 
 describe('Auth Utils tests', () => {
 
+	afterAll((done) => {
+		app.close(done);
+		// delete process.env.NODE_ENV;
+	});
+
 	it('should have `hash, compare, sign and verify` functions', () => {
 		expect(auth.hash).toBeDefined();
 		expect(auth.compare).toBeDefined();
