@@ -1,9 +1,8 @@
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 5000;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000;
 require('dotenv').config();
-import request from 'supertest-as-promised';
+import request from 'supertest';
 import { app } from '../../../server/server.js';
 let db = null;
-let server = null;
 
 jest.mock('../../../server/calling/config.js');
 
@@ -13,28 +12,22 @@ const resetDb = () => {
 
 describe('authHandler tests', () => {
 	beforeAll(() => {
-	  if (process.env.IS_ON === 'development') {
-	    process.env.DATABASE_URL = 'postgres://@localhost:5432/reflectivetest';
-	  }		
+	  // if (process.env.IS_ON === 'development') {
+	    // process.env.DATABASE_URL = 'postgres://@localhost:5432/reflectivetest';
+	  // }		
 		const dbConfig = require('../../../db/config.js');
 		db = dbConfig.db;
-		server = app.listen('1234', () => {
-  		console.log(`listening on port 1234...`);
-		});
 		return dbConfig.loadDb(db);
 	});
 
-	afterAll((done) => {
-		process.env.DATABASE_URL = 'postgres://@localhost:5432/reflective';
-		server.close(() => {
-	    console.log("Closed server 1234.");
-	    done();
-  	});
+	afterAll(() => {
+		// process.env.DATABASE_URL = 'postgres://@localhost:5432/reflective';
 	});
 
-	test('should handle POST /signup route', () => {
+
+	test('should handle POST /signup route', (done) => {
 		return resetDb().then(() => {
-			return request(server).post('/api/auth/signup')
+			return request(app).post('/api/auth/signup')
 				.send({
 					email: 'newUser@mail.com',
 					firstName: 'New user',
@@ -43,16 +36,17 @@ describe('authHandler tests', () => {
 					phone: '7582931276'
 				})
 				.expect(200)
-				.then(res => {
-					expect(res.body.user).toBeDefined();
-					expect(res.body.token).toBeDefined();
-				});
-		});
+		})
+			.then((res) => {
+				expect(res.body.user).toBeDefined();
+				expect(res.body.token).toBeDefined();
+				done();
+			});
 	});
 
-	test('should send an error message if email exists in the DB', () => {
+	test('should send an error message if email exists in the DB', (done) => {
 		return resetDb().then(() => {
-			return request(server).post('/api/auth/signup')
+			return request(app).post('/api/auth/signup')
 				.send({
 					email: 'newUser@mail.com',
 					firstName: 'New user',
@@ -60,25 +54,27 @@ describe('authHandler tests', () => {
 					password: 'password',
 					phone: '7582931276'
 				})
-		}).then(() => {
-			return request(server).post('/api/auth/signup')
-				.send({
-					email: 'newUser@mail.com',
-					firstName: 'New user',
-					lastName: 'To be deleted',
-					password: 'password',
-					phone: '7582931276'
-				})
-				.expect(400)
-				.then(res => {
-					expect(res.error.text).toBeDefined();
-				});
-		});
+		})
+			.then(() => {
+				return request(app).post('/api/auth/signup')
+					.send({
+						email: 'newUser@mail.com',
+						firstName: 'New user',
+						lastName: 'To be deleted',
+						password: 'password',
+						phone: '7582931276'
+					})
+					.expect(400)
+			})
+			.then(res => {
+				expect(res.error.text).toBeDefined();
+				done();
+			});
 	});
 
-	test('should handle POST /login route', () => {
+	test('should handle POST /login route', (done) => {
 		return resetDb().then(() => {
-			return request(server).post('/api/auth/signup')
+			return request(app).post('/api/auth/signup')
 				.send({
 					email: 'newUser@mail.com',
 					firstName: 'New user',
@@ -88,21 +84,22 @@ describe('authHandler tests', () => {
 				});
 		})
 		.then(() => {
-			return request(server).post('/api/auth/login')
+			return request(app).post('/api/auth/login')
 			.send({
 				email: 'newUser@mail.com',
 				password: 'password'
 			})
 			.expect(200)
-			.then(res => {
-				expect(res.body.user).toBeDefined();
-				expect(res.body.token).toBeDefined();
-			});
 		})
+		.then(res => {
+			expect(res.body.user).toBeDefined();
+			expect(res.body.token).toBeDefined();
+			done();
+		});
 	});
 
 	test('should send an error message if login fails.', (done) => {
-		return request(server).post('/api/auth/login')
+		return request(app).post('/api/auth/login')
 			.send({
 				email: 'newUser@mail.com',
 				password: 'wrongpassword'

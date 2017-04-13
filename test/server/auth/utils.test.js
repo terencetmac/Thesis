@@ -2,13 +2,11 @@ require('dotenv').config();
 const auth = require('../../../server/auth/utils.js');
 const express = require('express');
 const request = require('supertest-as-promised');
+let token;
 
 process.env.JWT_SECRET = 'secret';
 
 describe('Auth Utils tests', () => {
-
-	afterAll(() => {
-	});
 
 	it('should have `hash, compare, sign and verify` functions', () => {
 		expect(auth.hash).toBeDefined();
@@ -38,19 +36,25 @@ describe('Auth Utils tests', () => {
 
 	describe('JWT utilities', () => {
 
-		const user = {
+		let user = {
+			user_id: 1,
 			email: 'terence@email.com',
-			token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlcmVuY2VAZW1haWwuY29tIiwiaWF0IjoxNDkxOTQzODU3LCJleHAiOjE0OTIxMTY2NTd9.hKSNpf7n65iFpCOahyK8tX9W-IP3-Ng9lY_B2DesPWw'
+			first_name: 'Terence',
+			last_name: 'Tham',
+			phone: '1234567834'
 		}
+
+		token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlcmVuY2VAZW1haWwuY29tIiwiaWF0IjoxNDkxOTQzODU3LCJleHAiOjE0OTIxMTY2NTd9.hKSNpf7n65iFpCOahyK8tX9W-IP3-Ng9lY_B2DesPWw';
 
 		it('`sign` should return a promise', () => {
 			return auth.sign(user).then(val => {
 				expect(val).toBeDefined();
+				token = val;
 			})
 		});
 
 		it('`verify` should return a promise', () => {
-			return auth.verify(user.token).then(result => {
+			return auth.verify(token).then(result => {
 				expect(result.email).toEqual(user.email);
 			})
 		});
@@ -61,7 +65,7 @@ describe('Auth Utils tests', () => {
 		
 		it('sets req.user with user if successful.', () => {	
 			let app = express();
-			let token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlcmVuY2VAZW1haWwuY29tIiwiaWF0IjoxNDkxOTQzODU3LCJleHAiOjE0OTIxMTY2NTd9.hKSNpf7n65iFpCOahyK8tX9W-IP3-Ng9lY_B2DesPWw';
+			token = 'Bearer ' + token;
 
 			app.use(auth.authMiddleware, (req, res, next) => {
 				expect(req.user).toBeDefined();

@@ -8,7 +8,7 @@
     "node": ">=6.4.0"
   },
   "scripts": {
-    "test": "npm run test:server && npm run test:client && npm run test:db",
+    "test": "npm run test:server & npm run test:client & npm run test:db",
     "dev": "nodemon server/server.js --ignore /client",
     "start": "node server/server.js",
     "resetdb": "psql -c 'DROP DATABASE IF EXISTS reflective;' && psql -c 'CREATE DATABASE reflective;'",
