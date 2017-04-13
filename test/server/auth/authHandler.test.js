@@ -30,7 +30,7 @@ describe('authHandler tests', () => {
   	});
 	});
 
-	it('should handle POST /signup route', (done) => {
+	test('should handle POST /signup route', (done) => {
 		return resetDb().then(() => {
 			return request(server).post('/api/auth/signup')
 				.send({
@@ -44,14 +44,12 @@ describe('authHandler tests', () => {
 				.then(res => {
 					expect(res.body.user).toBeDefined();
 					expect(res.body.token).toBeDefined();
+					done();
 				});
-		})
-			.then(() => {
-				done();
-			});
+		});
 	});
 
-	it('should send an error message if email exists in the DB', (done) => {
+	test('should send an error message if email exists in the DB', (done) => {
 		return resetDb().then(() => {
 			return request(server).post('/api/auth/signup')
 				.send({
@@ -73,14 +71,12 @@ describe('authHandler tests', () => {
 				.expect(400)
 				.then(res => {
 					expect(res.error.text).toBeDefined();
+					done();
 				});
-		})
-			.then(() => {
-				done();
-			});;
+		});
 	});
 
-	it('should handle POST /login route', (done) => {
+	test('should handle POST /login route', (done) => {
 		return resetDb().then(() => {
 			return request(server).post('/api/auth/signup')
 				.send({
@@ -101,14 +97,12 @@ describe('authHandler tests', () => {
 			.then(res => {
 				expect(res.body.user).toBeDefined();
 				expect(res.body.token).toBeDefined();
-			});
-		})
-			.then(() => {
 				done();
 			});
+		})
 	});
 
-	it('should send an error message if login fails.', (done) => {
+	test('should send an error message if login fails.', (done) => {
 		return request(server).post('/api/auth/login')
 			.send({
 				email: 'newUser@mail.com',
@@ -124,7 +118,7 @@ describe('authHandler tests', () => {
 	/**
 	 * 3rd party API call route, not testing for now
 	 */
-	// it('should handle POST /verify route', () => {
+	// test('should handle POST /verify route', () => {
 	// 	const Call = require('../../../server/calling/config.js');
 	// 	Call.verify = jest.fn(() => {
 	// 		return Promise.resolve('value');
