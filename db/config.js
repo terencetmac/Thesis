@@ -1,9 +1,8 @@
 const pgp = require('pg-promise')();
 const schema = require('./schema.js');
+const url = process.env.DATABASE_URL;
 
-const url = process.env.DATABASE_URL || 'postgres://@localhost:5432/reflective';
-
-if (process.env.DATABASE_URL && process.env.NODE_ENV !== 'test') {
+if (process.env.IS_ON !== 'development') {
   pgp.pg.defaults.ssl = true;
 };
 

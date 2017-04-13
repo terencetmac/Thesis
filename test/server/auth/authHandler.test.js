@@ -1,3 +1,4 @@
+require('dotenv').config();
 import request from 'supertest-as-promised';
 import { app } from '../../../server/server.js';
 let db = null;
@@ -11,8 +12,9 @@ const resetDb = () => {
 
 describe('authHandler tests', () => {
 	beforeAll(() => {
-		process.env.NODE_ENV = 'test';
-		process.env.DATABASE_URL = 'postgres://@localhost:5432/reflectivetest';
+	  if (process.env.IS_ON === 'development') {
+	    process.env.DATABASE_URL = 'postgres://@localhost:5432/reflectivetest';
+	  }		
 		const dbConfig = require('../../../db/config.js');
 		db = dbConfig.db;
 		server = app.listen('1234', () => {
@@ -22,8 +24,7 @@ describe('authHandler tests', () => {
 	});
 
 	afterAll((done) => {
-	  delete process.env.NODE_ENV;
-	  delete process.env.DATABASE_URL;
+		process.env.DATABASE_URL = 'postgres://@localhost:5432/reflective';
 		server.close(() => {
 	    console.log("Closed server 1234.");
 	    done();

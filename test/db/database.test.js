@@ -1,15 +1,18 @@
-const Users = require('../../server/models/users.js');
+require('dotenv').config();
 let db = null;
+let Users = null;
 
 beforeAll(() => {
-  process.env.NODE_ENV = 'test';
+  if (process.env.IS_ON === 'development') {
+    process.env.DATABASE_URL = 'postgres://@localhost:5432/reflectivetest';
+  }
+  Users = require('../../server/models/users.js');
   const dbConfig = require('../../db/config.js');
   db = dbConfig.db;
   return dbConfig.loadDb(db);
 })
 
 afterAll(() => {
-  delete process.env.NODE_ENV;
   return db.one("DELETE FROM users WHERE first_name = 'John'");
 })
 

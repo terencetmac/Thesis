@@ -4,7 +4,6 @@ let server = null;
 
 describe('Calling API tests', () => {
 	beforeAll(() => {
- 		process.env.NODE_ENV = 'test';
  		server = app.listen('1235', () => {
   		console.log(`listening on port 1235...`);
 		});
@@ -15,7 +14,6 @@ describe('Calling API tests', () => {
 	    console.log("Closed server 1234.");
 	    done();
   	});
-		delete process.env.NODE_ENV;
 	});
 
 	it('/api/calling/call should respond to a POST request.', (done) => {

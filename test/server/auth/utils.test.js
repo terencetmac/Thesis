@@ -1,14 +1,13 @@
+require('dotenv').config();
 const auth = require('../../../server/auth/utils.js');
 const express = require('express');
 const request = require('supertest-as-promised');
 
 process.env.JWT_SECRET = 'secret';
-process.env.NODE_ENV = 'test;'
 
 describe('Auth Utils tests', () => {
 
 	afterAll(() => {
-		delete process.env.NODE_ENV;
 	});
 
 	it('should have `hash, compare, sign and verify` functions', () => {
@@ -24,13 +23,13 @@ describe('Auth Utils tests', () => {
 		const hashedPassword = '$2a$10$MkqMXMJAgsWxPY/qGTGYduuJnkqcA3g4A/x0FHaOtDNkUJ1dMgDp.';
 		
 		it('`hash` should return promise with hash value', () => {
-			auth.hash(plainTextPassword).then(val => {
+			return auth.hash(plainTextPassword).then(val => {
 				expect(val).toBeDefined();
 			});
 		});
 
 		it('`compare` should return promise with boolean', () => {
-			auth.compare(plainTextPassword, hashedPassword).then(val => {
+			return auth.compare(plainTextPassword, hashedPassword).then(val => {
 				expect(typeof val).toBe('boolean');
 			});
 		});
@@ -83,7 +82,7 @@ describe('Auth Utils tests', () => {
 				res.end();
 			});
 			
-			request(app)
+			return request(app)
 				.get('/')
 				.set({ 'authorization': token })
 				.expect(401)
