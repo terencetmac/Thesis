@@ -40,8 +40,12 @@ app.use('/api/auth', authHandler);
 
 const port = process.env.PORT || 3000;
 
-const server = app.listen(port, () => {
-  console.log(`listening on port ${port}...`);
-});
+if (process.env.NODE_ENV !== 'test') {
+	const server = app.listen(port, () => {
+	  console.log(`listening on port ${port}...`);
+	});
+}
 
-module.exports = server;
+module.exports = {
+	app: app
+};

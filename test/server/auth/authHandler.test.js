@@ -1,11 +1,8 @@
 import request from 'supertest-as-promised';
-import app from '../../../server/server.js';
+import { app } from '../../../server/server.js';
 let db = null;
-process.env.NODE_ENV = 'test';
-process.env.DATABASE_URL = 'postgres://@localhost:5432/reflectivetest';
-const dbConfig = require('../../../db/config.js');
-db = dbConfig.db;
-dbConfig.loadDb(db);
+let server = null;
+
 jest.mock('../../../server/calling/config.js');
 
 const resetDb = () => {
@@ -14,21 +11,28 @@ const resetDb = () => {
 
 describe('authHandler tests', () => {
 	beforeAll(() => {
-	  process.env.NODE_ENV = 'test';
+		process.env.NODE_ENV = 'test';
+		process.env.DATABASE_URL = 'postgres://@localhost:5432/reflectivetest';
+		const dbConfig = require('../../../db/config.js');
+		db = dbConfig.db;
+		dbConfig.loadDb(db);
+		server = app.listen('1234', () => {
+  		console.log(`listening on port 1234...`);
+		});
 	});
 
-	afterAll(() => {
-		app.close(function() {
-	    console.log("Closed out remaining connections.");
-  	});
+	afterAll((done) => {
 	  delete process.env.NODE_ENV;
 	  delete process.env.DATABASE_URL;
-		// return db.one("DELETE FROM users WHERE email = 'newUser@mail.com'");	
+		server.close(() => {
+	    console.log("Closed server 1234.");
+	    done();
+  	});
 	});
 
 	it('should handle POST /signup route', (done) => {
 		resetDb().then(() => {
-			return request(app).post('/api/auth/signup')
+			return request(server).post('/api/auth/signup')
 				.send({
 					email: 'newUser@mail.com',
 					firstName: 'New user',
@@ -47,7 +51,7 @@ describe('authHandler tests', () => {
 
 	it('should send an error message if email exists in the DB', (done) => {
 		resetDb().then(() => {
-			return request(app).post('/api/auth/signup')
+			return request(server).post('/api/auth/signup')
 				.send({
 					email: 'newUser@mail.com',
 					firstName: 'New user',
@@ -56,7 +60,7 @@ describe('authHandler tests', () => {
 					phone: '7582931276'
 				})
 		}).then(() => {
-			return request(app).post('/api/auth/signup')
+			return request(server).post('/api/auth/signup')
 				.send({
 					email: 'newUser@mail.com',
 					firstName: 'New user',
@@ -74,7 +78,7 @@ describe('authHandler tests', () => {
 
 	it('should handle POST /login route', (done) => {
 		resetDb().then(() => {
-			return request(app).post('/api/auth/signup')
+			return request(server).post('/api/auth/signup')
 				.send({
 					email: 'newUser@mail.com',
 					firstName: 'New user',
@@ -84,7 +88,7 @@ describe('authHandler tests', () => {
 				});
 		})
 		.then(() => {
-			return request(app).post('/api/auth/login')
+			return request(server).post('/api/auth/login')
 			.send({
 				email: 'newUser@mail.com',
 				password: 'password'
@@ -99,7 +103,7 @@ describe('authHandler tests', () => {
 	});
 
 	it('should send an error message if login fails.', (done) => {
-		return request(app).post('/api/auth/login')
+		return request(server).post('/api/auth/login')
 			.send({
 				email: 'newUser@mail.com',
 				password: 'wrongpassword'
