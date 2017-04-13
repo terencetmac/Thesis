@@ -21,7 +21,7 @@ router.post('/signup', (req, res) => {
 		})
 		.then(userFromDb => {
 	//		// TODO: Verify user's number
-	//		Call.sendVerification(phone, countryCode);
+			Call.sendVerification(userFromDb.phone);
 			user = userFromDb;
 			return auth.sign(user);
 		})
@@ -71,11 +71,11 @@ router.post('/login', (req, res) => {
 router.use('/verify', auth.authMiddleware);
 router.post('/verify', (req, res) => {
 	let verificationCode = req.body.verificationCode;
-	let phoneNumber = req.user.phone // from middleware
-	Call.verify(phoneNumber, 1, verificationCode)
+	let { user_id, phone } = req.user // from middleware
+	Call.verify(phone, 1, verificationCode)
 		.then(response => {
 			if (response) {
-				User.verify(phoneNumber);
+				User.verifyPhone(user_id, phone);
 				res.status(201).json({
 					message: 'Phone number has been successfully verified.'
 				});

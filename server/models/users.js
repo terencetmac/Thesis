@@ -5,14 +5,12 @@ module.exports.new = (user) => {
     'INSERT INTO users\
     (email, first_name, last_name, password, phone)\
     VALUES (${email}, ${first_name}, ${last_name}, ${password}, ${phone})\
-    RETURNING user_id, email, first_name, last_name, phone',
+    RETURNING user_id, email, first_name, last_name, phone, phone_verified',
     user)
 }
 
-module.exports.verify = (phone) => {
-  return db.one(
-    'UPDATE users SET active = $1 WHERE phone = $2',
-    [true, phone])
+module.exports.verifyPhone = (user_id, phone) => {
+  return module.exports.update(user_id, 'phone_verified', phone);
 }
 
 module.exports.findByEmail = (email) => {
