@@ -44,9 +44,11 @@ describe('authHandler tests', () => {
 				.then(res => {
 					expect(res.body.user).toBeDefined();
 					expect(res.body.token).toBeDefined();
-					done();
 				});
-		});
+		})
+			.then(() => {
+				done();
+			});
 	});
 
 	it('should send an error message if email exists in the DB', (done) => {
@@ -71,9 +73,11 @@ describe('authHandler tests', () => {
 				.expect(400)
 				.then(res => {
 					expect(res.error.text).toBeDefined();
-					done();
 				});
-		});
+		})
+			.then(() => {
+				done();
+			});;
 	});
 
 	it('should handle POST /login route', (done) => {
@@ -97,9 +101,11 @@ describe('authHandler tests', () => {
 			.then(res => {
 				expect(res.body.user).toBeDefined();
 				expect(res.body.token).toBeDefined();
+			});
+		})
+			.then(() => {
 				done();
 			});
-		});
 	});
 
 	it('should send an error message if login fails.', (done) => {
