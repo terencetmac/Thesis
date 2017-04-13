@@ -31,7 +31,7 @@ describe('authHandler tests', () => {
 	});
 
 	it('should handle POST /signup route', (done) => {
-		resetDb().then(() => {
+		return resetDb().then(() => {
 			return request(server).post('/api/auth/signup')
 				.send({
 					email: 'newUser@mail.com',
@@ -52,7 +52,7 @@ describe('authHandler tests', () => {
 	});
 
 	it('should send an error message if email exists in the DB', (done) => {
-		resetDb().then(() => {
+		return resetDb().then(() => {
 			return request(server).post('/api/auth/signup')
 				.send({
 					email: 'newUser@mail.com',
@@ -81,7 +81,7 @@ describe('authHandler tests', () => {
 	});
 
 	it('should handle POST /login route', (done) => {
-		resetDb().then(() => {
+		return resetDb().then(() => {
 			return request(server).post('/api/auth/signup')
 				.send({
 					email: 'newUser@mail.com',
