@@ -15,10 +15,10 @@ describe('authHandler tests', () => {
 		process.env.DATABASE_URL = 'postgres://@localhost:5432/reflectivetest';
 		const dbConfig = require('../../../db/config.js');
 		db = dbConfig.db;
-		dbConfig.loadDb(db);
 		server = app.listen('1234', () => {
   		console.log(`listening on port 1234...`);
 		});
+		return dbConfig.loadDb(db);
 	});
 
 	afterAll((done) => {
