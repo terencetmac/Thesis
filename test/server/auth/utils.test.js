@@ -3,11 +3,12 @@ const express = require('express');
 const request = require('supertest-as-promised');
 
 process.env.JWT_SECRET = 'secret';
-// process.env.NODE_ENV = 'test'
+process.env.NODE_ENV = 'test;'
+
 describe('Auth Utils tests', () => {
 
 	afterAll(() => {
-		// delete process.env.NODE_ENV;
+		delete process.env.NODE_ENV;
 	});
 
 	it('should have `hash, compare, sign and verify` functions', () => {

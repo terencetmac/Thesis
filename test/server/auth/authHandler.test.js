@@ -1,6 +1,8 @@
 import request from 'supertest-as-promised';
 import app from '../../../server/server.js';
 let db = null;
+process.env.NODE_ENV = 'test';
+process.env.DATABASE_URL = 'postgres://@localhost:5432/reflectivetest';
 const dbConfig = require('../../../db/config.js');
 db = dbConfig.db;
 dbConfig.loadDb(db);
@@ -11,11 +13,6 @@ const resetDb = () => {
 }
 
 describe('authHandler tests', () => {
-
-	// beforeEach('truncating db', () => {
-		
-	// });
-
 	beforeAll(() => {
 	  process.env.NODE_ENV = 'test';
 	});
@@ -25,10 +22,11 @@ describe('authHandler tests', () => {
 	    console.log("Closed out remaining connections.");
   	});
 	  delete process.env.NODE_ENV;
+	  delete process.env.DATABASE_URL;
 		// return db.one("DELETE FROM users WHERE email = 'newUser@mail.com'");	
 	});
 
-	it('should handle POST /signup route', () => {
+	it('should handle POST /signup route', (done) => {
 		resetDb().then(() => {
 			return request(app).post('/api/auth/signup')
 				.send({
@@ -42,11 +40,12 @@ describe('authHandler tests', () => {
 				.then(res => {
 					expect(res.body.user).toBeDefined();
 					expect(res.body.token).toBeDefined();
+					done();
 				});
 		});
 	});
 
-	it('should send an error message if email exists in the DB', () => {
+	it('should send an error message if email exists in the DB', (done) => {
 		resetDb().then(() => {
 			return request(app).post('/api/auth/signup')
 				.send({
@@ -68,11 +67,12 @@ describe('authHandler tests', () => {
 				.expect(400)
 				.then(res => {
 					expect(res.error.text).toBeDefined();
+					done();
 				});
 		});
 	});
 
-	it('should handle POST /login route', () => {
+	it('should handle POST /login route', (done) => {
 		resetDb().then(() => {
 			return request(app).post('/api/auth/signup')
 				.send({
@@ -93,11 +93,12 @@ describe('authHandler tests', () => {
 			.then(res => {
 				expect(res.body.user).toBeDefined();
 				expect(res.body.token).toBeDefined();
+				done();
 			});
 		});
 	});
 
-	it('should send an error message if login fails.', () => {
+	it('should send an error message if login fails.', (done) => {
 		return request(app).post('/api/auth/login')
 			.send({
 				email: 'newUser@mail.com',
@@ -106,7 +107,8 @@ describe('authHandler tests', () => {
 			.expect(401)
 			.then(res => {
 				expect(res.error.text).toBeDefined();
-			})
+				done();
+			});
 	});
 
 	/**
