@@ -1,3 +1,4 @@
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 5000;
 require('dotenv').config();
 import request from 'supertest-as-promised';
 import { app } from '../../../server/server.js';
