@@ -9,7 +9,8 @@ router.post('/signup', (req, res) => {
 	// #2 even if send is an error, sms gets sent
 	// #3 verifications sent are not recorded anywhere
 	// #4 what if user has been created and unvalidated, then user tries to signup again with the same credentials?
-	let { email, firstName, lastName, password, phone } = req.body;
+	
+	const { email, firstName, lastName, password, phone } = req.body;
 	let user;
 
 	auth.hash(password)
@@ -23,7 +24,7 @@ router.post('/signup', (req, res) => {
 			});
 		})
 		.then(userFromDb => {
-	// TODO: Verify user's number
+			// TODO: Verify user's number
 			Call.sendVerification(userFromDb.phone);
 			user = userFromDb;
 			return auth.sign(user);
@@ -43,7 +44,7 @@ router.post('/signup', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
-	let { email, password } = req.body;	
+	const { email, password } = req.body;	
 	let user;
 	User.findByEmail(email)
 		.then((userFromDb) => {
@@ -73,7 +74,7 @@ router.post('/login', (req, res) => {
 
 router.use('/verify', auth.authMiddleware);
 router.post('/verify', (req, res) => {
-	let verificationCode = req.body.verificationCode;
+	const verificationCode = req.body.verificationCode;
 	let { user_id, phone } = req.user // from middleware
 	Call.verify(phone, 1, verificationCode)
 		.then(response => {
@@ -90,7 +91,7 @@ router.post('/verify', (req, res) => {
 			res.status(400).json({
 				error: err
 			});
-		})
+		});
 });
 
 module.exports = router;

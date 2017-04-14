@@ -35,8 +35,7 @@ describe('authHandler tests', () => {
 					expect(res.body.token).toBeDefined();
 					done();
 				});
-		})
-	});
+		});
 
 	test('should send an error message if email exists in the DB', (done) => {
 		return resetDb().then(() => {
@@ -47,7 +46,7 @@ describe('authHandler tests', () => {
 					lastName: 'To be deleted',
 					password: 'password',
 					phone: '6505421376'
-				})
+				});
 		})
 			.then(() => {
 				return request(app).post('/api/auth/signup')

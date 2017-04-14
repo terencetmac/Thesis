@@ -21,6 +21,18 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(express.static(path.resolve(__dirname, '../client/public')));
 
+// TEMP: Protected route for Testing
+app.get('/protected', auth.authMiddleware, (req, res) => {
+	res.status(200).send();
+});
+
+app.get('/testing', (req, res) => {
+	// Call.sendVerification();
+})
+app.get('/testingverify', (req, res) => {
+	// Call.verify();
+})
+
 app.use('/calls', express.static(path.join(__dirname, '/calling/files')))
 app.use('/api/calling', callingHandler);
 

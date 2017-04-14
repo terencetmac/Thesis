@@ -61,6 +61,7 @@ module.exports = {
 			country_code: countryCode,
 			verification_code: verificationCode
 		});
+
 		return fetch(`https://api.authy.com/protected/json/phones/verification/check?${params}`, config)
 			.then(response => {
 				if (response.status === 200) {

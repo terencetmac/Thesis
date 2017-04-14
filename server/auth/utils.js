@@ -6,7 +6,7 @@ const saltRounds = 10;
 	Utils functions return Promises.
  */
 module.exports = {
-	hash: function(plainTextPassword) {
+	hash: (plainTextPassword) => {
 		return bcrypt.hash(plainTextPassword, saltRounds);
 	},
 
@@ -15,11 +15,11 @@ module.exports = {
 		* retrieved from the DB.
 		* @return {Boolean} True if successful
 	 */
-	compare: function(plainTextPassword, hashedPassword) {
+	compare: (plainTextPassword, hashedPassword) => {
 		return bcrypt.compare(plainTextPassword, hashedPassword);
 	},
 
-	sign: function(user) {
+	sign: (user) => {
 		let payload = {
 			user_id: user.user_id,
 			email: user.email,
@@ -44,7 +44,7 @@ module.exports = {
 		});
 	},
 
-	verify: function(token) {
+	verify: (token) => {
 		return new Promise((resolve, reject) => {
 			jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
 				if (err) {
@@ -56,7 +56,7 @@ module.exports = {
 		});
 	},
 
-	authMiddleware: function(req, res, next) {
+	authMiddleware: (req, res, next) => {
 		let token = req.headers['authorization'];
 		if (!token) {
 			return next();
