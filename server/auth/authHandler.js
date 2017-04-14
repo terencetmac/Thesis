@@ -35,7 +35,7 @@ router.post('/signup', (req, res) => {
 			});	
 		})
 		.catch(err => {
-			console.error('Error: ', err);
+			// console.error('Error: ', err);
 			res.status(400).json({
 				error: 'Email exists.'
 			});

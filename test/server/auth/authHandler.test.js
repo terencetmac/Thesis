@@ -1,11 +1,13 @@
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 5000;
 require('dotenv').config();
 const request = require('supertest');
-// const app = require('../../../server/server.js');
-import { app } from '../../../server/server.js';
+const app = require('../../../server/server.js').app;
 let db = null;
 const dbConfig = require('../../../db/config.js');
 db = dbConfig.db;
+
+jest.mock('../../../server/calling/config.js');
+const Call = require('../../../server/calling/config.js');
 
 const resetDb = () => {
 	return db.none('TRUNCATE users RESTART IDENTITY CASCADE');
@@ -13,21 +15,25 @@ const resetDb = () => {
 
 describe('authHandler tests', () => {
 
-	test('should handle POST /signup route', () => {
+	test('should handle POST /signup route', (done) => {
+		const user = {
+			email: 'newUser@mail.com',
+			firstName: 'New user',
+			lastName: 'To be deleted',
+			password: 'password',
+			phone: '6505421376'
+		};
+
 		return resetDb().then(() => {
 			return request(app)
 				.post('/api/auth/signup')
-				.send({
-					email: 'newUser@mail.com',
-					firstName: 'New user',
-					lastName: 'To be deleted',
-					password: 'password',
-					phone: '7582931276'
-				})
+				.send(user)
 				.then((res) => {
+					expect(Call.sendVerification).toBeCalledWith(user.phone);
 					expect(res.statusCode).toEqual(200);
 					expect(res.body.user).toBeDefined();
 					expect(res.body.token).toBeDefined();
+					done();
 				});
 		})
 	});
@@ -40,7 +46,7 @@ describe('authHandler tests', () => {
 					firstName: 'New user',
 					lastName: 'To be deleted',
 					password: 'password',
-					phone: '7582931276'
+					phone: '6505421376'
 				})
 		})
 			.then(() => {
@@ -50,7 +56,7 @@ describe('authHandler tests', () => {
 						firstName: 'New user',
 						lastName: 'To be deleted',
 						password: 'password',
-						phone: '7582931276'
+						phone: '6505421376'
 					})
 					.expect(400)
 			})
@@ -68,7 +74,7 @@ describe('authHandler tests', () => {
 					firstName: 'New user',
 					lastName: 'To be deleted',
 					password: 'password',
-					phone: '7582931276'
+					phone: '6505421376'
 				});
 		})
 		.then(() => {

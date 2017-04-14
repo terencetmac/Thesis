@@ -40,7 +40,7 @@ module.exports = {
 			country_code: countryCode
 		});
 
-		fetch(`https://api.authy.com/protected/json/phones/verification/start?${params}`, config)
+		return fetch(`https://api.authy.com/protected/json/phones/verification/start?${params}`, config)
 			.then(response => {
 				console.log('Verification sms sent successfully to: ', phone);
 			})
