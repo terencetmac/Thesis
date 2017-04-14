@@ -46,8 +46,8 @@ describe('authHandler tests', () => {
 					lastName: 'To be deleted',
 					password: 'password',
 					phone: '6505421376'
-				});
-		})
+				})
+			})
 			.then(() => {
 				return request(app).post('/api/auth/signup')
 					.send({
@@ -58,11 +58,11 @@ describe('authHandler tests', () => {
 						phone: '6505421376'
 					})
 					.expect(400)
-			})
-			.then(res => {
-				expect(res.error.text).toBeDefined();
-				done();
-			});
+				})
+				.then(res => {
+					expect(res.error.text).toBeDefined();
+					done();
+				});
 	});
 
 	test('should handle POST /login route', (done) => {
@@ -74,20 +74,21 @@ describe('authHandler tests', () => {
 					lastName: 'To be deleted',
 					password: 'password',
 					phone: '6505421376'
-				});
-		})
-		.then(() => {
-			return request(app).post('/api/auth/login')
-			.send({
-				email: 'newUser@mail.com',
-				password: 'password'
+				})
 			})
-			.expect(200)
-		})
-		.then(res => {
-			expect(res.body.user).toBeDefined();
-			expect(res.body.token).toBeDefined();
-			done();
+			.then(() => {
+				return request(app).post('/api/auth/login')
+				.send({
+					email: 'newUser@mail.com',
+					password: 'password'
+				})
+				.expect(200)
+			})
+			.then(res => {
+				expect(res.body.user).toBeDefined();
+				expect(res.body.token).toBeDefined();
+				done();
+			});
 		});
 	});
 
