@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const auth = require('./utils.js');
+const Auth = require('./utils.js');
 const Call = require('../calling/config.js');
 const User = require('../models/users.js');
 
@@ -13,7 +13,7 @@ router.post('/signup', (req, res) => {
 	const { email, firstName, lastName, password, phone } = req.body;
 	let user;
 
-	auth.hash(password)
+	Auth.hash(password)
 		.then(hashedPassword => {
 			return User.new({
 				email,
@@ -27,7 +27,7 @@ router.post('/signup', (req, res) => {
 			// TODO: Verify user's number
 			Call.sendVerification(userFromDb.phone);
 			user = userFromDb;
-			return auth.sign(user);
+			return Auth.sign(user);
 		})
 		.then(token => {
 			res.status(200).json({
@@ -49,11 +49,11 @@ router.post('/login', (req, res) => {
 	User.findByEmail(email)
 		.then((userFromDb) => {
 			user = userFromDb;
-			return auth.compare(password, user.password);
+			return Auth.compare(password, user.password);
 		})
 		.then(verified => {
 			if (verified) {
-				return auth.sign(user);
+				return Auth.sign(user);
 			} else {
 				throw new Error('Invalid Email/Password combination');
 			}
@@ -72,7 +72,7 @@ router.post('/login', (req, res) => {
 		});
 });
 
-router.use('/verify', auth.authMiddleware);
+router.use('/verify', Auth.authMiddleware);
 router.post('/verify', (req, res) => {
 	const verificationCode = req.body.verificationCode;
 	const { user_id, phone } = req.user // from middleware

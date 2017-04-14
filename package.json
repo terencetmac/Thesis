@@ -15,7 +15,7 @@
     "heroku-postbuild": "webpack -p --config ./webpack.prod.config.js --progress",
     "lint": "eslint client server",
     "jest": "jest",
-    "test:server": "jest --config test/jest.node.json test/server",
+    "test:server": "jest --forceExit --config test/jest.node.json test/server",
     "test:client": "jest --config test/jest.json test/client",
     "test:db": "jest --config test/jest.node.json test/db"
   },

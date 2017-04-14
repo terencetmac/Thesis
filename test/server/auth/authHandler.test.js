@@ -15,7 +15,7 @@ const resetDb = () => {
 
 describe('authHandler tests', () => {
 
-	test('should handle POST /signup route', (done) => {
+	test('should handle POST /signup route', () => {
 		const user = {
 			email: 'newUser@mail.com',
 			firstName: 'New user',
@@ -33,11 +33,11 @@ describe('authHandler tests', () => {
 					expect(res.statusCode).toEqual(200);
 					expect(res.body.user).toBeDefined();
 					expect(res.body.token).toBeDefined();
-					done();
 				});
 		});
+	});
 
-	test('should send an error message if email exists in the DB', (done) => {
+	test('should send an error message if email exists in the DB', () => {
 		return resetDb().then(() => {
 			return request(app).post('/api/auth/signup')
 				.send({
@@ -61,11 +61,10 @@ describe('authHandler tests', () => {
 				})
 				.then(res => {
 					expect(res.error.text).toBeDefined();
-					done();
 				});
 	});
 
-	test('should handle POST /login route', (done) => {
+	test('should handle POST /login route', () => {
 		return resetDb().then(() => {
 			return request(app).post('/api/auth/signup')
 				.send({
@@ -75,24 +74,22 @@ describe('authHandler tests', () => {
 					password: 'password',
 					phone: '6505421376'
 				})
-			})
-			.then(() => {
-				return request(app).post('/api/auth/login')
-				.send({
-					email: 'newUser@mail.com',
-					password: 'password'
+				.then(() => {
+					return request(app).post('/api/auth/login')
+					.send({
+						email: 'newUser@mail.com',
+						password: 'password'
+					})
+					.expect(200)
 				})
-				.expect(200)
-			})
-			.then(res => {
-				expect(res.body.user).toBeDefined();
-				expect(res.body.token).toBeDefined();
-				done();
-			});
+				.then(res => {
+					expect(res.body.user).toBeDefined();
+					expect(res.body.token).toBeDefined();
+				});
 		});
 	});
 
-	test('should send an error message if login fails.', (done) => {
+	test('should send an error message if login fails.', () => {
 		return request(app).post('/api/auth/login')
 			.send({
 				email: 'newUser@mail.com',
@@ -101,7 +98,6 @@ describe('authHandler tests', () => {
 			.expect(401)
 			.then(res => {
 				expect(res.error.text).toBeDefined();
-				done();
 			});
 	});
 
