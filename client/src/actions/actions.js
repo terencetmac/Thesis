@@ -72,7 +72,7 @@ function creatingUser() {
 function receiveUserInfo(userInfo) {
   return {
     type: RECEIVE_USER_INFO,
-    id: userInfo.id,
+    id: userInfo.user_id,
     firstName: userInfo.firstName,
     lastName: userInfo.lastName,
     phone: userInfo.phone,
@@ -97,19 +97,26 @@ export function createUser(user) {
   let config = {
     method: 'POST',
     headers: {
-      'Content-Type':'application/json',
-      protocol :'http:'
+      'Content-Type':'application/json'
     },
-    body: {firstName: user.firstName, lastName: user.lastName, phone: user.phone, email: user.email, password: user.password}
+    body: JSON.stringify({
+      firstName: user.firstName, 
+      lastName: user.lastName, 
+      phone: user.phone, 
+      email: user.email, 
+      password: user.password
+    })
   }
 
   return (dispatch) => {
     dispatch(creatingUser());
     return fetch('/api/auth/signup', config)
       .then(response => {
-        console.log(response);
-        localStorage.setItem('id_token', response.token);
-        dispatch(receiveUserInfo(response.user));
+        return response.json();
+      })
+      .then(responseJSON => {
+        localStorage.setItem('id_token', responseJSON.token);
+        dispatch(receiveUserInfo(responseJSON.user));
         dispatch(userCreated())
         dispatch(accountPageSubmit());
       })
@@ -141,10 +148,9 @@ export function verifyPhoneCode(code) {
     method: 'POST',
     headers: {
       'Content-Type':'application/json',
-      protocol :'http:',
       authorization: 'Bearer ' + localStorage.getItem('id_token')
     },
-    body: {verificationCode: code}
+    body: JSON.stringify({verificationCode: code})
   };
 
   return dispatch => {
