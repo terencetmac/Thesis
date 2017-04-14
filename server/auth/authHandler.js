@@ -75,7 +75,7 @@ router.post('/login', (req, res) => {
 router.use('/verify', auth.authMiddleware);
 router.post('/verify', (req, res) => {
 	const verificationCode = req.body.verificationCode;
-	let { user_id, phone } = req.user // from middleware
+	const { user_id, phone } = req.user // from middleware
 	Call.verify(phone, 1, verificationCode)
 		.then(response => {
 			if (response) {
