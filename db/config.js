@@ -9,8 +9,7 @@ if (process.env.IS_ON !== 'development') {
 const db = pgp(url);
 
 const loadDb = (db) => {
-  return schema(db);
-}
+  return schema(db);}
 
 if (process.env.NODE_ENV !== 'test') {
   loadDb(db)

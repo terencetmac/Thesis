@@ -69,10 +69,6 @@ module.exports = {
 				} else {
 					throw new Error('Invalid verification code');
 				}
-			})
-			.catch(error => {
-				console.log(error);
-				return error;
 			});
 	}
 }
