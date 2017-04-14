@@ -9,8 +9,8 @@ module.exports.new = (user) => {
     user)
 }
 
-module.exports.verifyPhone = (user_id, phone) => {
-  return module.exports.update(user_id, 'phone_verified', phone);
+module.exports.verifyPhone = (user_id) => {
+  return module.exports.update(user_id, 'phone_verified', true);
 }
 
 module.exports.findByEmail = (email) => {

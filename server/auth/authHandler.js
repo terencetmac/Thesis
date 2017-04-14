@@ -5,7 +5,10 @@ const User = require('../models/users.js');
 
 router.post('/signup', (req, res) => {
 	// TODO: Add server validation
-	
+	// Errors: #1 undefined becomes email exists error
+	// #2 even if send is an error, sms gets sent
+	// #3 verifications sent are not recorded anywhere
+	// #4 what if user has been created and unvalidated, then user tries to signup again with the same credentials?
 	let { email, firstName, lastName, password, phone } = req.body;
 	let user;
 
@@ -20,7 +23,7 @@ router.post('/signup', (req, res) => {
 			});
 		})
 		.then(userFromDb => {
-	//		// TODO: Verify user's number
+	// TODO: Verify user's number
 			Call.sendVerification(userFromDb.phone);
 			user = userFromDb;
 			return auth.sign(user);
@@ -32,7 +35,7 @@ router.post('/signup', (req, res) => {
 			});	
 		})
 		.catch(err => {
-			// console.error('Error: ', err);
+			console.error('Error: ', err);
 			res.status(400).json({
 				error: 'Email exists.'
 			});
@@ -75,16 +78,18 @@ router.post('/verify', (req, res) => {
 	Call.verify(phone, 1, verificationCode)
 		.then(response => {
 			if (response) {
-				User.verifyPhone(user_id, phone);
+				User.verifyPhone(user_id);
 				res.status(201).json({
 					message: 'Phone number has been successfully verified.'
 				});
+			} else {
+				throw new Error('Error verifying phone number with code');
 			}
 		})
 		.catch(err => {
 			res.status(400).json({
 				error: err
-			})
+			});
 		})
 });
 
